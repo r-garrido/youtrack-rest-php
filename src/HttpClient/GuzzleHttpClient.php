@@ -86,7 +86,13 @@ class GuzzleHttpClient implements
      */
     private function appendUserAgent(array $options): array
     {
-        $defaultAgent = 'GuzzleHttp/' . Client::VERSION;
+        // Backwards compatibility with Guzzle 6.5
+        if (defined('GuzzleHttp\Client::VERSION')) {
+            $defaultAgent = 'GuzzleHttp/' . Client::VERSION;
+        } else {
+            $defaultAgent = 'GuzzleHttp/' . ClientInterface::MAJOR_VERSION;
+        }
+
         if (extension_loaded('curl') && function_exists('curl_version')) {
             $curlVersion = \curl_version();
             if (\is_array($curlVersion)) {
