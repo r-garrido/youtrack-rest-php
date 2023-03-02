@@ -107,7 +107,13 @@ class YouTrackResponse implements
      */
     public function toArray(): array
     {
-        return json_decode($this->response->getBody()->getContents(), true);
+        $decoded = json_decode($this->response->getBody()->getContents(), true);
+
+        if (! is_array($decoded)) {
+            throw new \LogicException('Response body is not of the expected output.');
+        }
+
+        return $decoded;
     }
 
     /**
