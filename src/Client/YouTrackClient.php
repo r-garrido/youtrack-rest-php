@@ -89,6 +89,11 @@ class YouTrackClient implements
     public function request(string $method, string $uri, array $params = [], array $options = []): ResponseInterface
     {
         try {
+            if($method == 'GET' && $params) {
+                $uri = $uri . '?' . http_build_query($params);
+                $params = [];
+            }
+            
             $response = $this->httpClient->request($method, $this->buildUri($uri), $this->buildOptions($params, $options));
         } catch (HttpClientException $e) {
             switch ($e->getCode()) {
